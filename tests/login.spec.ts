@@ -17,13 +17,35 @@ test.describe("User account registration", () => {
 
   test("user can register a new account", async ({ page }) => {
     await headerComponent.btnSignup.click();
-    await loginPage.newUserSignup("test", "test@hdiii.com");
+    await loginPage.newUserSignup("test", "1test@hdiii.com");
     await signupPage.createAccount();
     await expect(page).toHaveURL(
       "https://automationexercise.com/account_created"
     );
     await signupPage.continueBtn.click();
     await expect(page).toHaveURL("https://automationexercise.com");
+    await headerComponent.btnDeleteAccount.click();
+    await expect(page).toHaveURL(
+      "https://automationexercise.com/delete_account"
+    );
+  });
+  test("user can login with correct username and password", async ({
+    page,
+  }) => {
+    await headerComponent.btnSignup.click();
+    await loginPage.newUserSignup("test", "2test@hdiii.com");
+    await signupPage.createAccount();
+    await expect(page).toHaveURL(
+      "https://automationexercise.com/account_created"
+    );
+    await signupPage.continueBtn.click();
+    await expect(page).toHaveURL("https://automationexercise.com");
+    await headerComponent.btnLogout.click();
+    await headerComponent.btnSignup.click();
+    await loginPage.emailLogin.fill("2test@hdiii.com");
+    await loginPage.passwordLogin.fill("password");
+    await loginPage.loginBtn.click();
+    await page.waitForTimeout(2000);
     await headerComponent.btnDeleteAccount.click();
     await expect(page).toHaveURL(
       "https://automationexercise.com/delete_account"
