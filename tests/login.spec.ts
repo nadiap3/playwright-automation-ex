@@ -29,6 +29,7 @@ test.describe("User account registration", () => {
       "https://automationexercise.com/delete_account"
     );
   });
+
   test("user can login with correct username and password", async ({
     page,
   }) => {
@@ -48,10 +49,29 @@ test.describe("User account registration", () => {
       "https://automationexercise.com/delete_account"
     );
   });
+
   test("user gets error message when trying to login with incorrect credentials", async ({
     page,
   }) => {
     await headerComponent.btnSignup.click();
     await loginPage.verifyInvalidLogin();
+  });
+
+  test("user can log out", async ({ page }) => {
+    await headerComponent.btnSignup.click();
+    await loginPage.newUserSignup("test", "logouttest@hdiii.com");
+    await signupPage.createAccount();
+    await expect(page).toHaveURL(
+      "https://automationexercise.com/account_created"
+    );
+    await signupPage.continueBtn.click();
+    await expect(page).toHaveURL("https://automationexercise.com");
+    await headerComponent.btnLogout.click();
+    await headerComponent.btnSignup.click();
+    await loginPage.loginToExistingAccount("logouttest@hdiii.com", "password");
+    await headerComponent.btnDeleteAccount.click();
+    await expect(page).toHaveURL(
+      "https://automationexercise.com/delete_account"
+    );
   });
 });
