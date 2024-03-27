@@ -2,21 +2,24 @@ import { test, expect, type Page } from "@playwright/test";
 import HeaderComponent from "../components/header.component";
 import { LoginPage } from "../page-objects/login-page";
 import { SignupPage } from "../page-objects/signup-page";
+import { HomePage } from "../page-objects/home-page";
 
 test.describe("User account registration", () => {
   let headerComponent: HeaderComponent;
   let loginPage: LoginPage;
   let signupPage: SignupPage;
+  let homePage: HomePage;
 
   test.beforeEach(async ({ page }) => {
     headerComponent = new HeaderComponent(page);
     loginPage = new LoginPage(page);
     signupPage = new SignupPage(page);
-    await page.goto("http://automationexercise.com/");
+    homePage = new HomePage(page);
+    await homePage.goto();
+    await headerComponent.btnSignup.click();
   });
 
   test("user can register a new account", async ({ page }) => {
-    await headerComponent.btnSignup.click();
     await loginPage.newUserSignup("test", "1test@hdiii.com");
     await signupPage.createAccount();
     await expect(page).toHaveURL(
@@ -33,8 +36,7 @@ test.describe("User account registration", () => {
   test("user can login with correct username and password", async ({
     page,
   }) => {
-    await headerComponent.btnSignup.click();
-    await loginPage.newUserSignup("test", "2test@hdiii.com");
+    await loginPage.newUserSignup("test", "2test@hdii.com");
     await signupPage.createAccount();
     await expect(page).toHaveURL(
       "https://automationexercise.com/account_created"
@@ -43,7 +45,7 @@ test.describe("User account registration", () => {
     await expect(page).toHaveURL("https://automationexercise.com");
     await headerComponent.btnLogout.click();
     await headerComponent.btnSignup.click();
-    await loginPage.loginToExistingAccount("2test@hdiii.com", "password");
+    await loginPage.loginToExistingAccount("2test@hdii.com", "password");
     await headerComponent.btnDeleteAccount.click();
     await expect(page).toHaveURL(
       "https://automationexercise.com/delete_account"
@@ -53,12 +55,10 @@ test.describe("User account registration", () => {
   test("user gets error message when trying to login with incorrect credentials", async ({
     page,
   }) => {
-    await headerComponent.btnSignup.click();
     await loginPage.verifyInvalidLogin();
   });
 
   test("user can log out", async ({ page }) => {
-    await headerComponent.btnSignup.click();
     await loginPage.newUserSignup("test", "logouttest@hdiii.com");
     await signupPage.createAccount();
     await expect(page).toHaveURL(
@@ -75,7 +75,6 @@ test.describe("User account registration", () => {
     );
   });
   test("register user with existing email", async ({ page }) => {
-    await headerComponent.btnSignup.click();
     await loginPage.newUserSignup("existing", "existing@test.com");
     await signupPage.createAccount();
     await expect(page).toHaveURL(
@@ -89,5 +88,8 @@ test.describe("User account registration", () => {
     await loginPage.verifyExistingEmail();
     await loginPage.loginToExistingAccount("existing@test.com", "password");
     await headerComponent.btnDeleteAccount.click();
+    await expect(page).toHaveURL(
+      "https://automationexercise.com/delete_account"
+    );
   });
 });
