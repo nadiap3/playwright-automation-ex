@@ -29,4 +29,10 @@ export class LoginPage {
     await this.signupBtn.click();
     await expect(this.page).toHaveURL("https://automationexercise.com/signup");
   }
+
+  async loginToExistingAccount(email: string, password: string) {
+    await this.emailLogin.fill(email);
+    await this.passwordLogin.fill(password);
+    await this.loginBtn.click();
+  }
 }

@@ -42,10 +42,7 @@ test.describe("User account registration", () => {
     await expect(page).toHaveURL("https://automationexercise.com");
     await headerComponent.btnLogout.click();
     await headerComponent.btnSignup.click();
-    await loginPage.emailLogin.fill("2test@hdiii.com");
-    await loginPage.passwordLogin.fill("password");
-    await loginPage.loginBtn.click();
-    await page.waitForTimeout(2000);
+    await loginPage.loginToExistingAccount("2test@hdiii.com", "password");
     await headerComponent.btnDeleteAccount.click();
     await expect(page).toHaveURL(
       "https://automationexercise.com/delete_account"
