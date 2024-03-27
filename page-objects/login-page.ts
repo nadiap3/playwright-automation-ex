@@ -8,6 +8,7 @@ export class LoginPage {
   readonly nameSignup: Locator;
   readonly emailSignup: Locator;
   readonly signupBtn: Locator;
+  readonly invalidCredentialsMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -17,6 +18,7 @@ export class LoginPage {
     this.nameSignup = page.locator('[data-qa="signup-name"]');
     this.emailSignup = page.locator('[data-qa="signup-email"]');
     this.signupBtn = page.locator('[data-qa="signup-button"]');
+    this.invalidCredentialsMessage = page.locator('[action="/login"] p');
   }
 
   async goto() {
@@ -34,5 +36,12 @@ export class LoginPage {
     await this.emailLogin.fill(email);
     await this.passwordLogin.fill(password);
     await this.loginBtn.click();
+  }
+
+  async verifyInvalidLogin() {
+    await this.loginToExistingAccount("invalid@test.com", "wrongpassword");
+    const errorMessage: string =
+      await this.invalidCredentialsMessage.innerText();
+    expect(errorMessage).toContain("Your email or password is incorrect!");
   }
 }

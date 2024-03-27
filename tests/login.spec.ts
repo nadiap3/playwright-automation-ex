@@ -48,4 +48,10 @@ test.describe("User account registration", () => {
       "https://automationexercise.com/delete_account"
     );
   });
+  test("user gets error message when trying to login with incorrect credentials", async ({
+    page,
+  }) => {
+    await headerComponent.btnSignup.click();
+    await loginPage.verifyInvalidLogin();
+  });
 });
