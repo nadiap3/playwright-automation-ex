@@ -74,4 +74,20 @@ test.describe("User account registration", () => {
       "https://automationexercise.com/delete_account"
     );
   });
+  test("register user with existing email", async ({ page }) => {
+    await headerComponent.btnSignup.click();
+    await loginPage.newUserSignup("existing", "existing@test.com");
+    await signupPage.createAccount();
+    await expect(page).toHaveURL(
+      "https://automationexercise.com/account_created"
+    );
+    await signupPage.continueBtn.click();
+    await expect(page).toHaveURL("https://automationexercise.com");
+    await headerComponent.btnLogout.click();
+    await headerComponent.btnSignup.click();
+    await loginPage.newUserSignup("existing", "existing@test.com");
+    await loginPage.verifyExistingEmail();
+    await loginPage.loginToExistingAccount("existing@test.com", "password");
+    await headerComponent.btnDeleteAccount.click();
+  });
 });
