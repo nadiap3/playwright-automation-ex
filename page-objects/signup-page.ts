@@ -3,6 +3,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 export class SignupPage {
   readonly page: Page;
   readonly enterAccountInformationHeader: Locator;
+  readonly title: Locator;
   readonly password: Locator;
   readonly birthdayDay: Locator;
   readonly birthdayDayValue: Locator;
@@ -14,7 +15,9 @@ export class SignupPage {
   readonly optinBox: Locator;
   readonly firstName: Locator;
   readonly lastName: Locator;
+  readonly company: Locator;
   readonly address: Locator;
+  readonly address2: Locator;
   readonly country: Locator;
   readonly state: Locator;
   readonly city: Locator;
@@ -22,10 +25,12 @@ export class SignupPage {
   readonly mobileNumber: Locator;
   readonly createAccountBtn: Locator;
   readonly continueBtn: Locator;
+  readonly accountCreated: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.enterAccountInformationHeader = page.locator(".login-form b");
+    this.title = page.locator("#id_gender1");
     this.password = page.locator('[data-qa="password"]');
     this.birthdayDay = page.locator('[data-qa="days"]');
     this.birthdayDayValue = page.locator('[data-qa="days"] [value="1"]');
@@ -37,7 +42,9 @@ export class SignupPage {
     this.optinBox = page.locator("#optin");
     this.firstName = page.locator('[data-qa="first_name"]');
     this.lastName = page.locator('[data-qa="last_name"]');
+    this.company = page.locator('[data-qa="company"]');
     this.address = page.locator('[data-qa="address"]');
+    this.address2 = page.locator('[data-qa="address2"]');
     this.country = page.locator('[data-qa="country"]');
     this.state = page.locator('[data-qa="state"]');
     this.city = page.locator('[data-qa="city"]');
@@ -45,6 +52,7 @@ export class SignupPage {
     this.mobileNumber = page.locator('[data-qa="mobile_number"]');
     this.createAccountBtn = page.locator('[data-qa="create-account"]');
     this.continueBtn = page.locator('[data-qa="continue-button"]');
+    this.accountCreated = page.locator('[data-qa="account-created"]');
   }
 
   async goto() {
@@ -57,19 +65,25 @@ export class SignupPage {
   }
 
   async createAccount() {
+    await this.title.click();
     await this.password.fill("password");
+    await this.birthdayDay.selectOption("20");
+    await this.birthdayMonth.selectOption("3");
+    await this.birthdayYear.selectOption("1990");
     await this.newsletterBox.click();
     await this.optinBox.click();
-    await this.firstName.fill("lalala");
-    await this.lastName.fill("lilili");
+    await this.firstName.fill("Mario");
+    await this.lastName.fill("Smith");
+    await this.company.fill("Google");
     await this.address.fill("123 st");
+    await this.address2.fill("building B");
+    await this.country.selectOption("United States");
     await this.state.fill("California");
     await this.city.fill("LA");
     await this.zipcode.fill("90210");
     await this.mobileNumber.fill("555-555-5555");
     await this.createAccountBtn.click();
-    await expect(this.page).toHaveURL(
-      "https://automationexercise.com/account_created"
-    );
+    const accountCreated = await this.accountCreated;
+    await expect(accountCreated).toBeVisible();
   }
 }

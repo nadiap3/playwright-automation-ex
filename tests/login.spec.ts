@@ -22,7 +22,7 @@ test.describe("User account registration", () => {
 
   test("user can register a new account", async ({ page }) => {
     await loginPage.verifySignupFormText();
-    await loginPage.newUserSignup("test", "1test@hdiii.com");
+    await loginPage.newUserSignup("test", "1test@hhi.com");
     await signupPage.verifyEnterAccountInformationText();
     await signupPage.createAccount();
     await expect(page).toHaveURL(
