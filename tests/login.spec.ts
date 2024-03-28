@@ -23,6 +23,7 @@ test.describe("User account registration", () => {
   test("user can register a new account", async ({ page }) => {
     await loginPage.verifySignupFormText();
     await loginPage.newUserSignup("test", "1test@hdiii.com");
+    await signupPage.verifyEnterAccountInformationText();
     await signupPage.createAccount();
     await expect(page).toHaveURL(
       "https://automationexercise.com/account_created"

@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SignupPage {
   readonly page: Page;
+  readonly enterAccountInformationHeader: Locator;
   readonly password: Locator;
   readonly birthdayDay: Locator;
   readonly birthdayDayValue: Locator;
@@ -24,6 +25,7 @@ export class SignupPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.enterAccountInformationHeader = page.locator(".login-form b");
     this.password = page.locator('[data-qa="password"]');
     this.birthdayDay = page.locator('[data-qa="days"]');
     this.birthdayDayValue = page.locator('[data-qa="days"] [value="1"]');
@@ -47,6 +49,11 @@ export class SignupPage {
 
   async goto() {
     await this.page.goto("https://automationexercise.com/login");
+  }
+
+  async verifyEnterAccountInformationText() {
+    const text = await this.enterAccountInformationHeader.first().innerText();
+    expect(text).toContain("ENTER ACCOUNT INFORMATION");
   }
 
   async createAccount() {
