@@ -16,10 +16,12 @@ test.describe("User account registration", () => {
     signupPage = new SignupPage(page);
     homePage = new HomePage(page);
     await homePage.goto();
+    await homePage.verifyHomePageIsVisible();
     await headerComponent.btnSignup.click();
   });
 
   test("user can register a new account", async ({ page }) => {
+    await loginPage.verifySignupFormText();
     await loginPage.newUserSignup("test", "1test@hdiii.com");
     await signupPage.createAccount();
     await expect(page).toHaveURL(

@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 export class LoginPage {
   readonly page: Page;
+  readonly signupFormText: Locator;
   readonly emailLogin: Locator;
   readonly passwordLogin: Locator;
   readonly loginBtn: Locator;
@@ -13,6 +14,7 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.signupFormText = page.locator(".signup-form h2");
     this.emailLogin = page.locator('[data-qa="login-email"]');
     this.passwordLogin = page.locator('[data-qa="login-password"]');
     this.loginBtn = page.locator('[data-qa="login-button"]');
@@ -25,6 +27,11 @@ export class LoginPage {
 
   async goto() {
     await this.page.goto("https://automationexercise.com/login");
+  }
+
+  async verifySignupFormText() {
+    const text = await this.signupFormText.innerText();
+    expect(text).toContain("New User Signup!");
   }
 
   async newUserSignup(name: string, email: string) {
